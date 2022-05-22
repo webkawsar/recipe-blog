@@ -1,13 +1,19 @@
+/* eslint-disable no-unused-vars */
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
+const connectDB = require('./config/db');
+
+// Database Connection
+connectDB();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +42,12 @@ app.use((err, req, res, next) => {
     // render the error page
     res.status(err.status || 500);
     res.render('error');
+});
+
+// app port listening
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+    console.log(`Listening on port: ${port}`);
 });
 
 module.exports = app;
